@@ -21,10 +21,10 @@ app.post('/api/entry-point-jira', async (req, res) => {
     try {
         const { method,creatore_ticket_email,summary, description, projectKey, issueType } = req.body;
         console.log(method,creatore_ticket_email,summary, description, projectKey, issueType )
-        // Costruisci l'URL per l'API di creazione ticket di Jira
+        // Costruisco l'URL per l'API di creazione ticket di Jira
         const url = `${JIRA_BASE_URL}/rest/api/3/issue`;
         console.log("url:" + url);
-        // Costruisci il corpo della richiesta per la creazione del ticket
+        // Body della richiesta per la creazione del ticket
         if(method =="createticket"){
             const requestBody = {
                 fields: {
@@ -54,7 +54,7 @@ app.post('/api/entry-point-jira', async (req, res) => {
                 }
             };
 
-            // Effettua la richiesta POST all'API di Jira per la creazione del ticket
+            // Effettuo la richiesta POST all'API di Jira per la creazione del ticket
             const response = await axios.post(url, requestBody, {
                 auth: {
                     /*username: JIRA_USERNAME,
@@ -65,17 +65,17 @@ app.post('/api/entry-point-jira', async (req, res) => {
                 }
             });
 
-            // Se la richiesta ha avuto successo, restituisci i dati del ticket creato
+            // Se la richiesta ha avuto successo, restituisco i dati del ticket creato
             res.json(response.data);
         }
     } catch (error) {
-        // Se si verifica un errore, restituisci un messaggio di errore
+        // Se si verifica un errore, restituisco un messaggio di errore
         console.error('Errore durante la creazione del ticket su Jira:', error.message);
         res.status(500).json({ error: 'Errore durante la creazione del ticket su Jira' });
     }
 });
 
-// Avvia il server
+// Avvio il server
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
