@@ -2,8 +2,10 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-
+const PORT = process.env.PORT || 3000;
+//const ENVIRONMENT = process.env.url;
 const server = http.createServer((req, res) => {
+    //console.log("ENVIRONMENT: " + ENVIRONMENT);
     console.log("step1");
     console.log("req.method:" + req.method);
     if (req.method === 'POST' && req.url === '/submit') {
@@ -11,10 +13,9 @@ const server = http.createServer((req, res) => {
         req.on('data', (chunk) => {
             body += chunk.toString();
         });
+        console.log("body:" + body);
         req.on('end', () => {
             const data = JSON.parse(body);
-
-            // Esempio di elaborazione dei dati del form
             const nome = data.name;
             const cognome = data.surname;
             const email = data.email;
@@ -24,10 +25,12 @@ const server = http.createServer((req, res) => {
             axios.post('http://localhost:4000/api/entry-point-jira', {                
                 method : "createticket",
                 projectKey : "AT",
-                summary : "ticket aperto da api nodejs",
-                description : "ho problemi con la prenotazione presso la struttura di trevignano",
+                summary : data.summary,
+                description : data.description,
                 issueType : "Task",
-                creatore_ticket_email : email
+                Email_creatore_ticket : email,
+                Nome_creatore_ticket : nome,
+                Cognome_creatore_ticket : cognome
             })
             .then(response => {
                 console.log('Risposta dal servizio esterno:', response.data);
@@ -79,7 +82,7 @@ const server = http.createServer((req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
+//const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
